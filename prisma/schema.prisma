@@ -1,8 +1,7 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+// SEO Keyword Tracker — Prisma schema (for reference / future use)
+// The app uses direct Turso REST API calls (see src/lib/turso.ts),
+// so this schema is documentation only. To create the actual tables,
+// run: npm run db:init
 
 generator client {
   provider = "prisma-client-js"
@@ -13,20 +12,44 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model User {
-  id        String   @id @default(cuid())
-  email     String   @unique
-  name      String?
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+model Restaurant {
+  id        String    @id
+  name      String
+  location  String
+  website   String?
+  cuisine   String?
+  createdAt DateTime
+  updatedAt DateTime
+  keywords  Keyword[]
 }
 
-model Post {
-  id        String   @id @default(cuid())
-  title     String
-  content   String?
-  published Boolean  @default(false)
-  authorId  String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+model Keyword {
+  id              String           @id
+  restaurantId    String
+  keyword         String
+  searchVolume    Int              @default(0)
+  difficulty      Int              @default(0)
+  organicRanking  Int?
+  gbpRanking      Int?
+  createdAt       DateTime
+  updatedAt       DateTime
+  restaurant      Restaurant       @relation(fields: [restaurantId], references: [id], onDelete: Cascade)
+  rankings        RankingHistory[]
+
+  @@index([restaurantId])
+  @@index([searchVolume])
+}
+
+model RankingHistory {
+  id              String   @id
+  keywordId       String
+  month           String
+  organicRanking  Int?
+  gbpRanking      Int?
+  createdAt       DateTime
+  keyword         Keyword  @relation(fields: [keywordId], references: [id], onDelete: Cascade)
+
+  @@unique([keywordId, month])
+  @@index([keywordId])
+  @@index([month])
 }
