@@ -20,6 +20,7 @@ CREATE TABLE IF NOT EXISTS Keyword (
   difficulty      INTEGER NOT NULL DEFAULT 0,
   organicRanking  INTEGER,
   gbpRanking      INTEGER,
+  dataSource      TEXT DEFAULT 'ai_estimate',
   createdAt       TEXT NOT NULL,
   updatedAt       TEXT NOT NULL,
   FOREIGN KEY (restaurantId) REFERENCES Restaurant(id) ON DELETE CASCADE

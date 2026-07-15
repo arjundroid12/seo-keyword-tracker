@@ -31,6 +31,7 @@ model Keyword {
   difficulty      Int              @default(0)
   organicRanking  Int?
   gbpRanking      Int?
+  dataSource      String           @default("ai_estimate")
   createdAt       DateTime
   updatedAt       DateTime
   restaurant      Restaurant       @relation(fields: [restaurantId], references: [id], onDelete: Cascade)

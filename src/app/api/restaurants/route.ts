@@ -196,17 +196,19 @@ Output ONLY the JSON array.` }
     for (const kw of keywords) {
       if (!kw.keyword) continue
       const kId = genId()
+      const kwDataSource = kw.dataSource === 'google_real' ? 'google_real' : 'ai_estimate'
       await tursoExecute(
-        "INSERT INTO Keyword (id, restaurantId, keyword, searchVolume, difficulty, organicRanking, gbpRanking, createdAt, updatedAt) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
-        [kId, rId, String(kw.keyword), Number(kw.searchVolume) || 0, Number(kw.difficulty) || 0, kw.organicRanking ? Number(kw.organicRanking) : null, kw.gbpRanking ? Number(kw.gbpRanking) : null, now(), now()]
+        "INSERT INTO Keyword (id, restaurantId, keyword, searchVolume, difficulty, organicRanking, gbpRanking, dataSource, createdAt, updatedAt) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+        [kId, rId, String(kw.keyword), Number(kw.searchVolume) || 0, Number(kw.difficulty) || 0, kw.organicRanking ? Number(kw.organicRanking) : null, kw.gbpRanking ? Number(kw.gbpRanking) : null, kwDataSource, now(), now()]
       )
     }
 
-    // Fetch saved keywords
+    // Fetch saved keywords (dataSource now persisted in DB)
     const savedKeywords = await tursoQuery("SELECT * FROM Keyword WHERE restaurantId = ? ORDER BY searchVolume DESC", [rId])
 
-    // Re-apply dataSource labels
+    // Re-apply dataSource labels (for backwards-compat with old rows that have null)
     const savedWithSource = savedKeywords.map((kw: any) => {
+      if (kw.dataSource) return kw
       const isGoogle = uniqueGoogleSuggestions.some(gs =>
         gs.toLowerCase().includes(kw.keyword.toLowerCase().split(' ').slice(0, 3).join(' ')) ||
         kw.keyword.toLowerCase().includes(gs.toLowerCase().split(' ').slice(0, 3).join(' '))
