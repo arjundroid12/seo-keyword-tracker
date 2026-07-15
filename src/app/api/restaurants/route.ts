@@ -199,7 +199,7 @@ export async function POST(req: NextRequest) {
       const ZAI_URL = "https://api.z.ai/api/paas/v4/chat/completions"
       const ZAI_KEY = process.env.ZAI_API_KEY
       const controller = new AbortController()
-      const timeout = setTimeout(() => controller.abort(), 45000)
+      const timeout = setTimeout(() => controller.abort(), 30000)
 
       const googleDataSection = uniqueGoogleSuggestions.length > 0
         ? `\n\nREAL GOOGLE SEARCH DATA (what people actually type into Google — for reference, do NOT duplicate these):\n${uniqueGoogleSuggestions.map((s, i) => `${i + 1}. "${s}"`).join('\n')}\n\nGenerate DIFFERENT keywords from the above. The Google keywords above are already saved. Your 30 keywords should be ADDITIONAL keyword ideas not in that list.`
@@ -313,16 +313,39 @@ Output ONLY the JSON array.` }
       [rId, name, location, website || null, cuisine || null, now(), now()]
     )
 
-    // Save all 60 keywords
+    // Save all 60 keywords in a BATCH (single Turso API call — was 60 sequential calls causing timeout)
+    const batchRequests: any[] = []
     for (const kw of allKeywords) {
       if (!kw.keyword) continue
       const kId = genId()
       const kwDataSource = kw.dataSource === 'google_real' ? 'google_real' : 'ai_estimate'
-      await tursoExecute(
-        "INSERT INTO Keyword (id, restaurantId, keyword, searchVolume, difficulty, organicRanking, gbpRanking, dataSource, createdAt, updatedAt) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
-        [kId, rId, String(kw.keyword), Number(kw.searchVolume) || 0, Number(kw.difficulty) || 0, kw.organicRanking ? Number(kw.organicRanking) : null, kw.gbpRanking ? Number(kw.gbpRanking) : null, kwDataSource, now(), now()]
-      )
+      batchRequests.push({
+        type: "execute",
+        stmt: {
+          sql: "INSERT INTO Keyword (id, restaurantId, keyword, searchVolume, difficulty, organicRanking, gbpRanking, dataSource, createdAt, updatedAt) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+          args: [
+            { type: "text", value: kId },
+            { type: "text", value: rId },
+            { type: "text", value: String(kw.keyword) },
+            { type: "float", value: Number(kw.searchVolume) || 0 },
+            { type: "float", value: Number(kw.difficulty) || 0 },
+            kw.organicRanking ? { type: "float", value: Number(kw.organicRanking) } : { type: "null" },
+            kw.gbpRanking ? { type: "float", value: Number(kw.gbpRanking) } : { type: "null" },
+            { type: "text", value: kwDataSource },
+            { type: "text", value: now() },
+            { type: "text", value: now() },
+          ],
+        },
+      })
     }
+    // Send all INSERTs in a single Turso pipeline request
+    const TURSO_URL = process.env.DATABASE_URL?.replace("libsql://", "https://") + "/v2/pipeline"
+    const TURSO_TOKEN = process.env.LIBSQL_TOKEN
+    await fetch(TURSO_URL!, {
+      method: "POST",
+      headers: { "Content-Type": "application/json", Authorization: `Bearer ${TURSO_TOKEN}` },
+      body: JSON.stringify({ requests: batchRequests }),
+    })
 
     // Fetch saved keywords
     const savedKeywords = await tursoQuery("SELECT * FROM Keyword WHERE restaurantId = ? ORDER BY searchVolume DESC", [rId])
