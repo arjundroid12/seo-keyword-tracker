@@ -1,0 +1,422 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+
+@custom-variant dark (&:is(.dark *));
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-inter), "Inter", system-ui, sans-serif;
+  --font-serif: var(--font-playfair), "Playfair Display", Georgia, serif;
+  --font-mono: var(--font-mono), "JetBrains Mono", monospace;
+  --color-sidebar-ring: var(--sidebar-ring);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar: var(--sidebar);
+  --color-chart-5: var(--chart-5);
+  --color-chart-4: var(--chart-4);
+  --color-chart-3: var(--chart-3);
+  --color-chart-2: var(--chart-2);
+  --color-chart-1: var(--chart-1);
+  --color-ring: var(--ring);
+  --color-input: var(--input);
+  --color-border: var(--border);
+  --color-destructive: var(--destructive);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-accent: var(--accent);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-muted: var(--muted);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-secondary: var(--secondary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary: var(--primary);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-popover: var(--popover);
+  --color-card-foreground: var(--card-foreground);
+  --color-card: var(--card);
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+}
+
+:root {
+  --radius: 0.625rem;
+  --background: oklch(1 0 0);
+  --foreground: oklch(0.145 0 0);
+  --card: oklch(1 0 0);
+  --card-foreground: oklch(0.145 0 0);
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0.145 0 0);
+  --primary: oklch(0.205 0 0);
+  --primary-foreground: oklch(0.985 0 0);
+  --secondary: oklch(0.97 0 0);
+  --secondary-foreground: oklch(0.205 0 0);
+  --muted: oklch(0.97 0 0);
+  --muted-foreground: oklch(0.556 0 0);
+  --accent: oklch(0.97 0 0);
+  --accent-foreground: oklch(0.205 0 0);
+  --destructive: oklch(0.577 0.245 27.325);
+  --border: oklch(0.922 0 0);
+  --input: oklch(0.922 0 0);
+  --ring: oklch(0.708 0 0);
+  --chart-1: oklch(0.646 0.222 41.116);
+  --chart-2: oklch(0.6 0.118 184.704);
+  --chart-3: oklch(0.398 0.07 227.392);
+  --chart-4: oklch(0.828 0.189 84.429);
+  --chart-5: oklch(0.769 0.188 70.08);
+  --sidebar: oklch(0.985 0 0);
+  --sidebar-foreground: oklch(0.145 0 0);
+  --sidebar-primary: oklch(0.205 0 0);
+  --sidebar-primary-foreground: oklch(0.985 0 0);
+  --sidebar-accent: oklch(0.97 0 0);
+  --sidebar-accent-foreground: oklch(0.205 0 0);
+  --sidebar-border: oklch(0.922 0 0);
+  --sidebar-ring: oklch(0.708 0 0);
+}
+
+.dark {
+  --background: oklch(0.145 0 0);
+  --foreground: oklch(0.985 0 0);
+  --card: oklch(0.205 0 0);
+  --card-foreground: oklch(0.985 0 0);
+  --popover: oklch(0.205 0 0);
+  --popover-foreground: oklch(0.985 0 0);
+  --primary: oklch(0.922 0 0);
+  --primary-foreground: oklch(0.205 0 0);
+  --secondary: oklch(0.269 0 0);
+  --secondary-foreground: oklch(0.985 0 0);
+  --muted: oklch(0.269 0 0);
+  --muted-foreground: oklch(0.708 0 0);
+  --accent: oklch(0.269 0 0);
+  --accent-foreground: oklch(0.985 0 0);
+  --destructive: oklch(0.704 0.191 22.216);
+  --border: oklch(1 0 0 / 10%);
+  --input: oklch(1 0 0 / 15%);
+  --ring: oklch(0.556 0 0);
+  --chart-1: oklch(0.488 0.243 264.376);
+  --chart-2: oklch(0.696 0.17 162.48);
+  --chart-3: oklch(0.769 0.188 70.08);
+  --chart-4: oklch(0.627 0.265 303.9);
+  --chart-5: oklch(0.645 0.246 16.439);
+  --sidebar: oklch(0.205 0 0);
+  --sidebar-foreground: oklch(0.985 0 0);
+  --sidebar-primary: oklch(0.488 0.243 264.376);
+  --sidebar-primary-foreground: oklch(0.985 0 0);
+  --sidebar-accent: oklch(0.269 0 0);
+  --sidebar-accent-foreground: oklch(0.985 0 0);
+  --sidebar-border: oklch(1 0 0 / 10%);
+  --sidebar-ring: oklch(0.556 0 0);
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground;
+    font-family: var(--font-inter), "Inter", system-ui, sans-serif;
+  }
+  /* All headings use premium serif (Playfair Display) */
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-playfair), "Playfair Display", Georgia, serif;
+    color: #ffffff;
+    letter-spacing: -0.02em;
+  }
+}
+
+/* ============ PREMIUM WHITE TYPOGRAPHY (dark sections only) ============ */
+/* Only force white text on the dark-themed sections (hero, agents, splash) */
+/* White-themed sections (projects, about, contact, footer) use Tailwind classes */
+body {
+  color: #ffffff;
+}
+
+/* ============ LENIS SMOOTH SCROLL ============ */
+/* Prevent layout shift & ensure html/body take full scroll height */
+html.lenis, html.lenis body {
+  height: auto;
+}
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+.lenis.lenis-smooth [data-lenis-prevent] {
+  overscroll-behavior: contain;
+}
+.lenis.lenis-stopped {
+  overflow: hidden;
+}
+.lenis.lenis-smooth iframe {
+  pointer-events: none;
+}
+
+/* ============ ULTRA-SMOOTH PERFORMANCE OPTIMIZATIONS ============ */
+/* GPU-accelerate all transformed elements — prevents 30fps jank */
+* {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+/* Canvas (Three.js) — promote to GPU layer for smoother 3D */
+canvas {
+  will-change: transform;
+  transform: translateZ(0);
+  backface-visibility: hidden;
+}
+
+/* Fixed elements — always GPU-accelerated (nav, overlays, splash) */
+.fixed, [class*="fixed"] {
+  transform: translateZ(0);
+  will-change: transform, opacity;
+  backface-visibility: hidden;
+}
+
+/* Reduce paint on scroll — contain layout/paint to viewport */
+/* NOTE: Do NOT add 'contain' to section — it breaks position:sticky
+   which the horizontal pinned agents section relies on. */
+header, footer, main {
+  contain: layout style;
+}
+
+/* Animated cards — promote to GPU on hover for smooth lift */
+[class*="liquid-glass"], [class*="hover:scale"], [class*="group-hover"] {
+  will-change: transform;
+  transform: translateZ(0);
+}
+
+/* Disable smooth scroll CSS (Lenis handles it) — prevents double-easing jank */
+html {
+  scroll-behavior: auto !important;
+}
+
+/* Optimize transition rendering — premium ease curve */
+@media (prefers-reduced-motion: no-preference) {
+  * {
+    transition-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+  }
+}
+
+/* Removed: !important overrides that forced text-gray-* to white.
+   These were breaking white-themed sections (projects, about, contact)
+   by making dark gray text invisible on white backgrounds.
+   Tailwind classes now work as expected — text-gray-900 = dark, etc. */
+
+/* Premium serif utility classes */
+.font-serif {
+  font-family: var(--font-playfair), "Playfair Display", Georgia, serif !important;
+}
+
+.font-display {
+  font-family: var(--font-playfair), "Playfair Display", Georgia, serif !important;
+  letter-spacing: -0.025em;
+  font-weight: 700;
+}
+
+/* ============ LIQUID GLASS UI ============ */
+.liquid-glass {
+  background: rgba(255, 255, 255, 0.04) !important;
+  backdrop-filter: blur(24px) saturate(1.8);
+  -webkit-backdrop-filter: blur(24px) saturate(1.8);
+  border: 1px solid rgba(255, 255, 255, 0.08) !important;
+  box-shadow:
+    0 8px 32px rgba(0, 0, 0, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.1);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.liquid-glass:hover {
+  background: rgba(255, 255, 255, 0.07) !important;
+  border-color: rgba(255, 255, 255, 0.18) !important;
+  box-shadow:
+    0 12px 40px rgba(0, 0, 0, 0.4),
+    0 0 20px rgba(255, 255, 255, 0.08),
+    inset 0 1px 0 rgba(255, 255, 255, 0.15),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.1);
+  transform: translateY(-2px);
+}
+
+.liquid-glass-strong {
+  background: rgba(255, 255, 255, 0.06) !important;
+  backdrop-filter: blur(32px) saturate(2);
+  -webkit-backdrop-filter: blur(32px) saturate(2);
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  box-shadow:
+    0 16px 48px rgba(0, 0, 0, 0.4),
+    inset 0 1px 0 rgba(255, 255, 255, 0.12),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.1);
+}
+
+.liquid-glass-nav {
+  background: rgba(10, 10, 15, 0.5) !important;
+  backdrop-filter: blur(40px) saturate(1.5);
+  -webkit-backdrop-filter: blur(40px) saturate(1.5);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06) !important;
+}
+
+/* ============ 3a WATER DROPLET CARD ANIMATIONS ============ */
+@keyframes orbDrift {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  50% { transform: translate(30px, -20px) scale(1.08); }
+}
+@keyframes blobMorph {
+  0%, 100% { border-radius: 38px 44px 40px 46px / 42px 38px 46px 40px; }
+  25% { border-radius: 46px 38px 46px 38px / 38px 46px 38px 46px; }
+  50% { border-radius: 40px 46px 38px 44px / 46px 40px 44px 38px; }
+  75% { border-radius: 44px 40px 44px 40px / 40px 44px 40px 44px; }
+}
+@keyframes wobble {
+  0%, 100% { transform: scale(1, 1); }
+  30% { transform: scale(1.008, 0.994); }
+  60% { transform: scale(0.995, 1.006); }
+}
+@keyframes waveSweep {
+  0% { transform: translateX(-60%) skewX(-18deg); }
+  100% { transform: translateX(160%) skewX(-18deg); }
+}
+
+/* ============ AGENTS TRACK — responsive centering padding ============ */
+/* First card starts centered, last card ends centered */
+/* Card widths: 85vw mobile, 55vw tablet, 42vw desktop */
+/* Padding = 50vw - halfCardWidth */
+.agents-track {
+  padding-left: calc(50vw - 42.5vw);   /* mobile: 85vw card → half = 42.5vw */
+  padding-right: calc(50vw - 42.5vw);
+}
+@media (min-width: 768px) {
+  .agents-track {
+    padding-left: calc(50vw - 27.5vw);  /* tablet: 55vw card → half = 27.5vw */
+    padding-right: calc(50vw - 27.5vw);
+  }
+}
+@media (min-width: 1024px) {
+  .agents-track {
+    padding-left: calc(50vw - 21vw);    /* desktop: 42vw card → half = 21vw */
+    padding-right: calc(50vw - 21vw);
+  }
+}
+
+/* ============ STAR TWINKLE ============ */
+@keyframes twinkle {
+  0%, 100% { opacity: 0.2; transform: scale(1); }
+  50% { opacity: 0.9; transform: scale(1.2); }
+}
+
+/* ============ TBJ EPIC CUBE DEMO — Custom Font ============ */
+@font-face {
+  font-family: 'TBJ Epic Cube';
+  src: url('/fonts/TBJEpicCubeDemo-BoldExpanded.ttf') format('truetype');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'TBJ Epic Cube';
+  src: url('/fonts/TBJEpicCubeDemo-ExtraExpanded.ttf') format('truetype');
+  font-weight: 800;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'TBJ Epic Cube';
+  src: url('/fonts/TBJEpicCubeDemo-UltraExpanded.ttf') format('truetype');
+  font-weight: 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* ============ MERINDA — Custom Font for Splash Screen ============ */
+@font-face {
+  font-family: 'Merinda';
+  src: url('/fonts/Merinda.otf') format('opentype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* ============ TRENCH SLAB — Custom Display Font ============ */
+@font-face {
+  font-family: 'TrenchSlab';
+  src: url('/fonts/TrenchSlab-Bold.woff2') format('woff2'),
+       url('/fonts/TrenchSlab-Bold.woff') format('woff');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'TrenchSlab';
+  src: url('/fonts/TrenchSlab-Regular.woff2') format('woff2'),
+       url('/fonts/TrenchSlab-Regular.woff') format('woff');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* ============ TANKER — Custom Font for Splash Screen ============ */
+@font-face {
+  font-family: 'Tanker';
+  src: url('/fonts/Tanker-Regular.woff2') format('woff2'),
+       url('/fonts/Tanker-Regular.woff') format('woff');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* ============ ARRAY — Custom Font for Splash Screen ============ */
+@font-face {
+  font-family: 'Array';
+  src: url('/fonts/Array-BoldWide.woff2') format('woff2'),
+       url('/fonts/Array-BoldWide.woff') format('woff');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Array';
+  src: url('/fonts/Array-Wide.woff2') format('woff2'),
+       url('/fonts/Array-Wide.woff') format('woff');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Array';
+  src: url('/fonts/Array-Bold.woff2') format('woff2'),
+       url('/fonts/Array-Bold.woff') format('woff');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* ============ SHIMMER MOVE (for premium nav bar) ============ */
+@keyframes shimmerMove {
+  0% { transform: translateX(-140%) skewX(-16deg); }
+  100% { transform: translateX(360%) skewX(-16deg); }
+}
+
+/* ============ TORCH GLOW (flickering halo around torches) ============ */
+@keyframes torchGlow {
+  0% { opacity: 0.6; transform: scale(0.9); }
+  100% { opacity: 0.9; transform: scale(1.1); }
+}
+
+/* ============ DUST FLOAT (floating dust particles in dungeon) ============ */
+@keyframes dustFloat {
+  0% { transform: translateY(0) translateX(0); opacity: 0; }
+  10% { opacity: 0.6; }
+  90% { opacity: 0.4; }
+  100% { transform: translateY(-100vh) translateX(20px); opacity: 0; }
+}
+
+/* ============ KING SHAKE (screen shake when King attacks) ============ */
+@keyframes kingShake {
+  10%, 90% { transform: translate3d(-2px, 0, 0); }
+  20%, 80% { transform: translate3d(4px, 0, 0); }
+  30%, 50%, 70% { transform: translate3d(-6px, 0, 0); }
+  40%, 60% { transform: translate3d(6px, 0, 0); }
+}
