@@ -169,8 +169,13 @@ export async function POST(req: NextRequest) {
       `authentic ${c} food ${location}`,
       `${c} cuisine ${location}`,
     ]
-    for (const q of seedQueries) {
-      const suggestions = await getGoogleSuggestions(q)
+    // Fetch all 16 Google Autocomplete queries + PageSpeed IN PARALLEL
+    // (was sequential — caused Vercel 60s timeout)
+    const [allSuggestions, pageSpeedResult] = await Promise.all([
+      Promise.all(seedQueries.map(q => getGoogleSuggestions(q))),
+      website ? getPageSpeed(website) : Promise.resolve(null),
+    ])
+    for (const suggestions of allSuggestions) {
       googleSuggestions.push(...suggestions)
     }
     // Deduplicate and take first 30
@@ -182,12 +187,9 @@ export async function POST(req: NextRequest) {
     )
 
     // ═══════════════════════════════════════════════════════════════════
-    // STEP 2: Get REAL Google PageSpeed data (free, no key)
+    // STEP 2: PageSpeed result (fetched in parallel above)
     // ═══════════════════════════════════════════════════════════════════
-    let pageSpeed: any = null
-    if (website) {
-      pageSpeed = await getPageSpeed(website)
-    }
+    const pageSpeed: any = pageSpeedResult
 
     // ═══════════════════════════════════════════════════════════════════
     // STEP 3: Generate 30 AI keywords via Z.AI (using Google data as context)
